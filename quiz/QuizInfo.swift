@@ -11,11 +11,11 @@ import Foundation
 struct QuizInfo {
     var photoUrl: String? = nil
     let title: String
-    let id: Int32
+    let id: String
     
     init(dictionary: NSDictionary) {
         title = dictionary.valueForKey("title") as! String
-        id = (dictionary.valueForKey("id") as! NSNumber).intValue
+        id = "\(dictionary.valueForKey("id"))"
         if let mainPhoto = dictionary.valueForKey("mainPhoto") as? NSDictionary, let url = mainPhoto.valueForKey("url") as? String {
             photoUrl = url
         }

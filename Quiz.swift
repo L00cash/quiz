@@ -20,9 +20,9 @@ class Quiz: NSManagedObject {
         title = quizInfo.title
         photoUrl = quizInfo.photoUrl
         id = quizInfo.id
-
+        
     }
-
+    
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }

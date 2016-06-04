@@ -56,7 +56,7 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
     }
 
     
-    func fetchWebData(amount: Int16, offset: Int16) {
+    func fetchWebData(amount: Int16, offset: Int16, shouldRegenerateTable: Bool) {
         
         fetchingInProgress = true
         downloadManager?.getQuizList(amount, offset: offset, onCompletion: { (quizArray, error) in
@@ -75,6 +75,12 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
             self.fetchingInProgress = false
             
             self.updateCells()
+            
+            if shouldRegenerateTable {
+                 dispatch_async(dispatch_get_main_queue()) {
+                     self.tableView?.reloadData()
+                }
+            }
             
             do {
                 try self.managedObjectContext.save()
@@ -95,8 +101,6 @@ extension QuizListDataProvider: UITableViewDataSource {
     
     func configureCellForIndexPath(cell: QuizCell, indexPath: NSIndexPath) {
         let currentQuiz = quizes![indexPath.row]
-        
-        print(currentQuiz.id)
         
         cell.activityView.hidden = true
         
@@ -126,7 +130,7 @@ extension QuizListDataProvider: UITableViewDataSource {
             cellsToReload.append(indexPath)
             loadingCell(cell)
             if fetchingInProgress == false {
-                fetchWebData(chunkSize, offset: Int16((quizes?.count)!))
+                fetchWebData(chunkSize, offset: Int16((quizes?.count)!), shouldRegenerateTable: false)
             }
         } else {
             configureCellForIndexPath(cell, indexPath: indexPath)
@@ -137,6 +141,11 @@ extension QuizListDataProvider: UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if downloadManager!.userDefaults!.objectForKey("amountOfQuizes") == nil {
+            fetchWebData(chunkSize, offset: 0, shouldRegenerateTable: true)
+        }
+        
         return downloadManager!.userDefaults!.integerForKey("amountOfQuizes")
     }
 }

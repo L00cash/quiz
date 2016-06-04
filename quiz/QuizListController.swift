@@ -43,7 +43,7 @@ extension QuizListController: QuizListDataProviderFailureDelegateProtocol {
     func coreDataFetchFailure() {
         let alertController = UIAlertController(title: "Fetch error", message: "Unable to fetch data from local database", preferredStyle: UIAlertControllerStyle.Alert)
         self.presentViewController(alertController, animated: false, completion: nil)
-        alertController.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: { action in
+        alertController.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
             switch action.style{
             case .Default:
                 print("default")
