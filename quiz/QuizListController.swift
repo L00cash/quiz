@@ -35,6 +35,12 @@ class QuizListController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "openQuiz" {
+            (segue.destinationViewController as! QuizViewController).quiz = dataProvider?.selectedQuiz()
+        }
+    }
 
 }
 

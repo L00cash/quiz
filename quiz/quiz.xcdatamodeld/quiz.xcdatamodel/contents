@@ -8,6 +8,7 @@
     </entity>
     <entity name="Question" representedClassName=".Question" syncable="YES">
         <attribute name="imageUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" attributeType="String" syncable="YES"/>
         <relationship name="answers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Answer" inverseName="question" inverseEntity="Answer" syncable="YES"/>
         <relationship name="quiz" maxCount="1" deletionRule="Cascade" destinationEntity="Quiz" inverseName="questions" inverseEntity="Quiz" syncable="YES"/>
@@ -23,7 +24,7 @@
     </entity>
     <elements>
         <element name="Answer" positionX="-54" positionY="36" width="128" height="105"/>
-        <element name="Question" positionX="-63" positionY="18" width="128" height="105"/>
+        <element name="Question" positionX="-63" positionY="18" width="128" height="120"/>
         <element name="Quiz" positionX="-63" positionY="-18" width="128" height="150"/>
     </elements>
 </model>

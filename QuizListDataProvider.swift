@@ -25,6 +25,7 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
     var fetchingInProgress = false
     var cellsToReload: [NSIndexPath] = []
     
+    //TODO: dependency injection
     lazy var managedObjectContext : NSManagedObjectContext = {
         let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         return appDelegate.managedObjectContext
@@ -69,7 +70,6 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
             for quiz in quizArray! {
                 let quizObject = Quiz(quizInfo: quiz, entity: self.entity, insertIntoManagedObjectContext: self.managedObjectContext)
                 self.quizes?.append(quizObject)
-                print(quizObject)
             }
             
             self.fetchingInProgress = false
@@ -91,6 +91,11 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
                 self.quizes = Array(self.quizes!.prefix(self.quizes!.count - quizArray!.count))
             }
         })
+    }
+    
+    func selectedQuiz() -> Quiz {
+        let quiz = quizes![self.tableView!.indexPathForSelectedRow!.row]
+        return quiz
     }
 }
 

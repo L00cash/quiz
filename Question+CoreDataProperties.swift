@@ -14,9 +14,10 @@ import CoreData
 
 extension Question {
 
-    @NSManaged var title: String?
     @NSManaged var imageUrl: String?
-    @NSManaged var quiz: Quiz?
+    @NSManaged var title: String?
+    @NSManaged var order: Int16
     @NSManaged var answers: NSSet?
+    @NSManaged var quiz: Quiz?
 
 }

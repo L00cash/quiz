@@ -16,7 +16,7 @@ extension Answer {
 
     @NSManaged var isCorrect: Bool
     @NSManaged var order: Int16
-    @NSManaged var title: String?
+    @NSManaged var title: String!
     @NSManaged var question: Question?
 
 }

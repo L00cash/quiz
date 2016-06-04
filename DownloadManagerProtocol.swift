@@ -10,5 +10,6 @@ import Foundation
 
 protocol DownloadManagerProtocol {
     func getQuizList(amount: Int16, offset: Int16, onCompletion: ListRespose) -> Void
+    func getQuizDetails(quizId: String, onCompletion: QuizResponse) -> Void
     var userDefaults: NSUserDefaults? {get set}
 }

@@ -13,5 +13,18 @@ import CoreData
 class Answer: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
-
+    init(question: Question, answerInfo: AnswerInfo, entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
+        isCorrect = answerInfo.isCorrect
+        order = answerInfo.order
+        title = answerInfo.text
+        self.question = question
+        
+    }
+    
+    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }
+    
 }

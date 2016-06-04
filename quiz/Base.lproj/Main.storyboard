@@ -140,6 +140,7 @@
                                     <outlet property="quizImage" destination="Fqd-aC-nB0" id="O9j-0g-xnL"/>
                                     <outlet property="startedQuizView" destination="hxJ-5T-4pI" id="ns0-vX-C2A"/>
                                     <outlet property="title" destination="YyH-p5-6xp" id="5f5-1h-gio"/>
+                                    <segue destination="olB-YW-JWW" kind="presentation" identifier="openQuiz" modalTransitionStyle="flipHorizontal" id="o0e-Hk-3BG"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -153,10 +154,10 @@
             </objects>
             <point key="canvasLocation" x="161" y="357"/>
         </scene>
-        <!--View Controller-->
+        <!--Quiz View Controller-->
         <scene sceneID="c3E-8Q-QVd">
             <objects>
-                <viewController id="olB-YW-JWW" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="quizView" id="olB-YW-JWW" customClass="QuizViewController" customModule="quiz" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="k6w-sE-1Jk"/>
                         <viewControllerLayoutGuide type="bottom" id="7oo-eh-d8t"/>
@@ -165,7 +166,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tytuł quizu" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ag-eE-tXy">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tytuł pytania" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ag-eE-tXy">
                                 <rect key="frame" x="0.0" y="20" width="600" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="27"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -177,6 +178,16 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nLK-W2-eY5">
                                 <rect key="frame" x="0.0" y="103" width="600" height="497"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="answerCell" id="JZw-N2-WNA">
+                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JZw-N2-WNA" id="xWV-Ld-yaE">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -193,6 +204,11 @@
                             <constraint firstItem="3ag-eE-tXy" firstAttribute="top" secondItem="k6w-sE-1Jk" secondAttribute="bottom" id="dNQ-hy-Jw1"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="progress" destination="MMm-u4-Lea" id="QbZ-CK-LKO"/>
+                        <outlet property="questionTitle" destination="3ag-eE-tXy" id="RLz-il-hNd"/>
+                        <outlet property="tableView" destination="nLK-W2-eY5" id="C7c-r7-gIy"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ig3-UH-KVg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

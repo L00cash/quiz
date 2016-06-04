@@ -14,4 +14,5 @@ protocol QuizListDataProviderProtocol: UITableViewDataSource {
     weak var fetchFailedDelegate: QuizListDataProviderFailureDelegateProtocol? {get set}
     func fetchCoreData()
     func fetchWebData(amount: Int16, offset: Int16, shouldRegenerateTable: Bool)
+    func selectedQuiz() -> Quiz
 }
