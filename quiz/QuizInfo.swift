@@ -15,7 +15,7 @@ struct QuizInfo {
     
     init(dictionary: NSDictionary) {
         title = dictionary.valueForKey("title") as! String
-        id = "\(dictionary.valueForKey("id"))"
+        id = "\(dictionary.valueForKey("id")!)"
         if let mainPhoto = dictionary.valueForKey("mainPhoto") as? NSDictionary, let url = mainPhoto.valueForKey("url") as? String {
             photoUrl = url
         }

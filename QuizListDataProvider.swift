@@ -74,12 +74,14 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
             
             self.fetchingInProgress = false
             
-            self.updateCells()
+            
             
             if shouldRegenerateTable {
                  dispatch_async(dispatch_get_main_queue()) {
                      self.tableView?.reloadData()
                 }
+            } else {
+                self.updateCells()
             }
             
             do {
