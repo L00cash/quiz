@@ -40,6 +40,7 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = entity
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
         
         do {
             try quizes = managedObjectContext.executeFetchRequest(fetchRequest) as? [Quiz]
