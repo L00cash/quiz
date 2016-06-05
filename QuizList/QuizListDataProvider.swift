@@ -159,7 +159,7 @@ extension QuizListDataProvider: UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if downloadManager!.userDefaults!.objectForKey("amountOfQuizes") == nil {
+        if fetchingInProgress == false && downloadManager!.userDefaults!.objectForKey("amountOfQuizes") == nil {
             fetchWebData(chunkSize, offset: 0, shouldRegenerateTable: true)
         }
         
