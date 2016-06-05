@@ -41,7 +41,7 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
                 return
             }
             
-            delegate.setupProgress(Int16(questionNbr), all: quiz.questionsCount)
+            delegate.setupProgress(Int16(questionNbr), all: Int16(quiz.questions!.count))
             delegate.setupTitle(currentQuestion!.title!)
         }
     }
@@ -62,7 +62,7 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
             do {
                 try self.quiz!.managedObjectContext!.save()
                 self.filterCurrentQuestion()
-                self.delegate?.setupProgress(Int16(self.questionNbr!), all: self.quiz!.questionsCount)
+                self.delegate?.setupProgress(Int16(self.questionNbr!), all: Int16(self.quiz!.questions!.count))
                 self.delegate?.setupTitle(self.currentQuestion!.title!)
                 dispatch_async(dispatch_get_main_queue()) {
                     self.tableView?.reloadData()
