@@ -12,6 +12,7 @@ struct QuizInfo {
     var photoUrl: String? = nil
     let title: String
     let id: String
+    let questionCount: Int16
     
     init(dictionary: NSDictionary) {
         title = dictionary.valueForKey("title") as! String
@@ -19,5 +20,6 @@ struct QuizInfo {
         if let mainPhoto = dictionary.valueForKey("mainPhoto") as? NSDictionary, let url = mainPhoto.valueForKey("url") as? String {
             photoUrl = url
         }
+        questionCount = (dictionary.valueForKey("questions") as! NSNumber).shortValue
     }
 }

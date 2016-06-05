@@ -23,18 +23,26 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
     
     lazy var entity: NSEntityDescription = {
         NSEntityDescription.entityForName("Question", inManagedObjectContext: self.managedObjectContext)
-        }()!
+    }()!
     
-    required init(quiz: Quiz, questionNbr: Int, downloadManager: DownloadManagerProtocol) {
+    required init(quiz: Quiz, questionNbr: Int, downloadManager: DownloadManagerProtocol, delegate: QuizViewDataProviderDelegateProtocol) {
         super.init()
         self.quiz = quiz
         self.questionNbr = questionNbr
         self.downloadManager = downloadManager
+        self.delegate = delegate
         if quiz.questions?.count == 0 {
             fetchQuestions()
         } else {
             filterCurrentQuestion()
-            delegate?.setupTitle(currentQuestion!.title!)
+            
+            if currentQuestion == nil  {
+                delegate.showEndScreen()
+                return
+            }
+            
+            delegate.setupProgress(Int16(questionNbr), all: quiz.questionsCount)
+            delegate.setupTitle(currentQuestion!.title!)
         }
     }
     
@@ -51,12 +59,10 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
                 _ = Question(quiz: self.quiz!, quiestionInfo: info, entity: self.entity, insertIntoManagedObjectContext: self.managedObjectContext)
             }
             
-//            self.quiz!.questions! = tempSet!.copy() as! NSSet
-            
-            
             do {
                 try self.quiz!.managedObjectContext!.save()
                 self.filterCurrentQuestion()
+                self.delegate?.setupProgress(Int16(self.questionNbr!), all: self.quiz!.questionsCount)
                 self.delegate?.setupTitle(self.currentQuestion!.title!)
                 dispatch_async(dispatch_get_main_queue()) {
                     self.tableView?.reloadData()
@@ -81,9 +87,27 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
         self.currentQuestion = question!.first as? Question
     }
     
-    func answer(answerNumber: Int) {
+    func answer(answerNumber: Int) -> Answer {
+        let answer = self.currentQuestion?.answers?.filter({ (element) -> Bool in
+            if let a = element as? Answer {
+                return Int(a.order) == answerNumber + 1
+            }
+            return false
+        })
         
+        return answer!.first as! Answer
     }
+    
+    
+    func checkCorrectAnswer(selectedAnswer: Int) {
+        let ans = answer(selectedAnswer)
+        
+        if ans.isCorrect {
+            quiz?.questionsCorrect += 1
+        }
+    }
+    
+    
 }
 
 
@@ -93,9 +117,9 @@ extension QuizViewDataProvider: UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
      
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "answerCell")
-        
-        
-        cell.textLabel?.text = "aa"
+        cell.textLabel?.adjustsFontSizeToFitWidth = true
+        let ans = answer(indexPath.row)
+        cell.textLabel?.text = ans.title!
         
         return cell
     }

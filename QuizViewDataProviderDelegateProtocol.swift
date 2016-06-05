@@ -11,4 +11,5 @@ import Foundation
 protocol QuizViewDataProviderDelegateProtocol: class {
     func setupProgress(done: Int16, all: Int16)
     func setupTitle(title: String)
+    func showEndScreen()
 }

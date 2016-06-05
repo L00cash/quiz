@@ -113,6 +113,7 @@ extension QuizListDataProvider: UITableViewDataSource {
         
         cell.title.text = currentQuiz.title
         cell.correctAnswers.text = "\(currentQuiz.questionsCorrect)" + " / " + "\(currentQuiz.questionsCount)"
+        cell.quizImage.sd_setImageWithURL(NSURL(string: currentQuiz.photoUrl!), placeholderImage: UIImage(named: "placeholder"))
         
         guard currentQuiz.questionsCount > 0 else {
             cell.startedQuizView.hidden = true
@@ -120,14 +121,11 @@ extension QuizListDataProvider: UITableViewDataSource {
             return
         }
         
-//        if 
-        
         let percentageScore = currentQuiz.questionsCorrect / currentQuiz.questionsCount
         cell.percentageScore.text = "\(percentageScore)%"
         
-        let attemptedQuestionsPercent = currentQuiz.questionsDone / Int16((currentQuiz.questions?.count)!)
+        let attemptedQuestionsPercent = currentQuiz.questionsDone / currentQuiz.questionsCount
         cell.attemptedQuestions.text = "\(attemptedQuestionsPercent)%"
-//        cell.quizImage
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

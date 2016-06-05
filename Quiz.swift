@@ -20,7 +20,7 @@ class Quiz: NSManagedObject {
         title = quizInfo.title
         photoUrl = quizInfo.photoUrl
         id = quizInfo.id
-        
+        questionsCount = quizInfo.questionCount
     }
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
