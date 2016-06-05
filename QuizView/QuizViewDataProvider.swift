@@ -105,8 +105,15 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
         if ans.isCorrect {
             quiz?.questionsCorrect += 1
         }
+        quiz?.questionsDone += 1
+        do {
+            try quiz?.managedObjectContext?.save()
+        } catch {
+            //TODO: handle
+            print("error occured while saving question answer")
+        }
+        
     }
-    
     
 }
 

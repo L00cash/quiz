@@ -38,7 +38,10 @@ class QuizListController: UITableViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "openQuiz" {
-            (segue.destinationViewController as! QuizViewController).quiz = dataProvider?.selectedQuiz()
+            let selectedQuiz = dataProvider?.selectedQuiz()
+            let destinationController = (segue.destinationViewController as! QuizViewController)
+            destinationController.quiz = selectedQuiz
+            destinationController.questionNumber = Int(selectedQuiz!.questionsDone)
         }
     }
 
