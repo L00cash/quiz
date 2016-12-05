@@ -16,13 +16,13 @@ class Question: NSManagedObject {
     
     
     init(quiz: Quiz, quiestionInfo: QuestionInfo, entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        super.init(entity: entity, insertInto: context)
         
         title = quiestionInfo.title
         imageUrl = quiestionInfo.imageUrl
         order = quiestionInfo.order
         self.quiz = quiz
-        let answerEntity = NSEntityDescription.entityForName("Answer", inManagedObjectContext: context!)
+        let answerEntity = NSEntityDescription.entity(forEntityName: "Answer", in: context!)
         
         var arr: [Answer] = []
         for answer in quiestionInfo.answers! {
@@ -33,7 +33,7 @@ class Question: NSManagedObject {
         
     }
     
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
 }

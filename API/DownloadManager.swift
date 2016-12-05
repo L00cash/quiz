@@ -8,8 +8,8 @@
 
 import Foundation
 
-typealias ListRespose = ([QuizInfo]?, NSError?) -> Void
-typealias QuizResponse = ([QuestionInfo]?, NSError?) -> Void
+typealias ListRespose = ([QuizInfo]?, Error?) -> Void
+typealias QuizResponse = ([QuestionInfo]?, Error?) -> Void
 
 
 struct DownloadManagerConstants {
@@ -21,25 +21,25 @@ struct DownloadManagerConstants {
 
 class DownloadManager: NSObject, DownloadManagerProtocol {
     
-    var userDefaults: NSUserDefaults?
+    var userDefaults: UserDefaults?
     
-    func getQuizList(amount: Int16, offset: Int16, onCompletion: ListRespose) -> Void {
+    func getQuizList(_ amount: Int16, offset: Int16, onCompletion: @escaping ListRespose) {
         let url = DownloadManagerConstants.quizListUrl + "\(offset)/" + "\(amount)"
-        let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-        request.HTTPMethod = "GET"
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "GET"
         
-        let session = NSURLSession.sharedSession()
+        let session = URLSession.shared
         
-        let task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+        let task = session.dataTask(with: request) { (data, response, error) in
             var quizList: [QuizInfo]? = nil
             if error == nil {
                 var dict: Dictionary<NSString, AnyObject>?
                 var JSONerror: NSError?
                 do {
-                    dict = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as? Dictionary
+                    dict = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as? Dictionary
                     
                     quizList = self.parseQuizList(dict!)
-
+                    
                 } catch let err as NSError {
                     JSONerror = err
                     print("Error -> \(err)")
@@ -49,25 +49,31 @@ class DownloadManager: NSObject, DownloadManagerProtocol {
             } else {
                 onCompletion(nil, error)
             }
-        })
+        }
+        
         
         task.resume()
     }
+
     
-    func getQuizDetails(quizId: String, onCompletion: QuizResponse) -> Void {
+//    func getQuizList(_ amount: Int16, offset: Int16, onCompletion: @escaping ListRespose) -> Void {
+//        
+//    }
+    
+    internal func getQuizDetails(_ quizId: String, onCompletion: @escaping QuizResponse) {
         let url = DownloadManagerConstants.quizUrl + quizId + "/0"
-        let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-        request.HTTPMethod = "GET"
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "GET"
         
-        let session = NSURLSession.sharedSession()
+        let session = URLSession.shared
         
-        let task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+        let task = session.dataTask(with: request, completionHandler: {data, response, error -> Void in
             var questionList: [QuestionInfo] = []
             if error == nil {
                 var dict: Dictionary<NSString, AnyObject>?
                 var JSONerror: NSError?
                 do {
-                    dict = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as? Dictionary
+                    dict = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as? Dictionary
                     
                     questionList = self.parseQuestionList(dict!)
                     
@@ -83,10 +89,10 @@ class DownloadManager: NSObject, DownloadManagerProtocol {
         })
         
         task.resume()
-
     }
     
-    func parseQuestionList(dict: Dictionary<NSString, AnyObject>) -> [QuestionInfo] {
+    
+    func parseQuestionList(_ dict: Dictionary<NSString, AnyObject>) -> [QuestionInfo] {
         let questions = dict["questions"] as! NSArray
         
         var arr = [QuestionInfo]()
@@ -97,9 +103,9 @@ class DownloadManager: NSObject, DownloadManagerProtocol {
         return arr
     }
     
-    func parseQuizList(dict: Dictionary<NSString, AnyObject>) -> [QuizInfo] {
+    func parseQuizList(_ dict: Dictionary<NSString, AnyObject>) -> [QuizInfo] {
         let amountOfQuizes = dict["count"] as! NSNumber
-        userDefaults!.setObject(amountOfQuizes, forKey: "amountOfQuizes")
+        userDefaults!.set(amountOfQuizes, forKey: "amountOfQuizes")
         
         
         let items = dict["items"] as? NSArray

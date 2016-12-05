@@ -23,27 +23,27 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
     weak var fetchFailedDelegate: QuizListDataProviderFailureDelegateProtocol?
     let cellIdentifier = "cell"
     var fetchingInProgress = false
-    var cellsToReload: [NSIndexPath] = []
+    var cellsToReload: [IndexPath] = []
     
     //TODO: dependency injection
     lazy var managedObjectContext : NSManagedObjectContext = {
-        let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.managedObjectContext
     }()
     
     lazy var entity: NSEntityDescription = {
-        NSEntityDescription.entityForName("Quiz", inManagedObjectContext: self.managedObjectContext)
+        NSEntityDescription.entity(forEntityName: "Quiz", in: self.managedObjectContext)
     }()!
     
 
     func fetchCoreData() {
         
-        let fetchRequest = NSFetchRequest()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
         fetchRequest.entity = entity
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
         
         do {
-            try quizes = managedObjectContext.executeFetchRequest(fetchRequest) as? [Quiz]
+            try quizes = managedObjectContext.fetch(fetchRequest) as? [Quiz]
         } catch {
             print(error)
             fetchFailedDelegate?.coreDataFetchFailure()
@@ -51,14 +51,14 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
     }
     
     func updateCells() {
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.tableView?.reloadRowsAtIndexPaths(self.cellsToReload, withRowAnimation: UITableViewRowAnimation.None)
+        DispatchQueue.main.async { 
+            self.tableView?.reloadRows(at: self.cellsToReload, with: UITableViewRowAnimation.none)
             self.cellsToReload = []
         }
     }
 
     
-    func fetchWebData(amount: Int16, offset: Int16, shouldRegenerateTable: Bool) {
+    func fetchWebData(_ amount: Int16, offset: Int16, shouldRegenerateTable: Bool) {
         
         fetchingInProgress = true
         downloadManager?.getQuizList(amount, offset: offset, onCompletion: { (quizArray, error) in
@@ -78,7 +78,7 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
             
             
             if shouldRegenerateTable {
-                 dispatch_async(dispatch_get_main_queue()) {
+                 DispatchQueue.main.async {
                      self.tableView?.reloadData()
                 }
             } else {
@@ -103,32 +103,32 @@ class QuizListDataProvider: NSObject, QuizListDataProviderProtocol {
 //MARK: UITableViewDataSource
 extension QuizListDataProvider: UITableViewDataSource {
     
-    func loadingCell(cell: QuizCell) {
-        cell.activityView.hidden = false
+    func loadingCell(_ cell: QuizCell) {
+        cell.activityView.isHidden = false
     }
     
-    func configureCellForIndexPath(cell: QuizCell, indexPath: NSIndexPath) {
+    func configureCellForIndexPath(_ cell: QuizCell, indexPath: IndexPath) {
         let currentQuiz = quizes![indexPath.row]
         
-        cell.activityView.hidden = true
+        cell.activityView.isHidden = true
         
         cell.title.text = currentQuiz.title
         cell.correctAnswers.text = "\(currentQuiz.questionsCorrect)" + " / " + "\(currentQuiz.questionsCount)"
-        cell.quizImage.sd_setImageWithURL(NSURL(string: currentQuiz.photoUrl!), placeholderImage: UIImage(named: "placeholder"))
+        cell.quizImage.sd_setImage(with: URL(string: currentQuiz.photoUrl!), placeholderImage: UIImage(named: "placeholder"))
         
         guard currentQuiz.questionsDone > 0 else {
-            cell.startedQuizView.hidden = true
-            cell.finishedQuizView.hidden = true
+            cell.startedQuizView.isHidden = true
+            cell.finishedQuizView.isHidden = true
             return
         }
         
         if currentQuiz.questionsDone > 0 {
             if currentQuiz.questionsDone == currentQuiz.questionsCount {
-                cell.startedQuizView.hidden = true
-                cell.finishedQuizView.hidden = false
+                cell.startedQuizView.isHidden = true
+                cell.finishedQuizView.isHidden = false
             } else {
-                cell.startedQuizView.hidden = false
-                cell.finishedQuizView.hidden = true
+                cell.startedQuizView.isHidden = false
+                cell.finishedQuizView.isHidden = true
             }
         }
         
@@ -140,8 +140,8 @@ extension QuizListDataProvider: UITableViewDataSource {
         cell.attemptedQuestions.text = "\((attemptedQuestionsPercent * 100).format(".0"))%"
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = self.tableView?.dequeueReusableCellWithIdentifier(cellIdentifier) as! QuizCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = self.tableView?.dequeueReusableCell(withIdentifier: cellIdentifier) as! QuizCell
         
         if indexPath.row >= quizes!.count {
             cellsToReload.append(indexPath)
@@ -157,12 +157,12 @@ extension QuizListDataProvider: UITableViewDataSource {
         return cell
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if fetchingInProgress == false && downloadManager!.userDefaults!.objectForKey("amountOfQuizes") == nil {
+        if fetchingInProgress == false && downloadManager!.userDefaults!.object(forKey: "amountOfQuizes") == nil {
             fetchWebData(chunkSize, offset: 0, shouldRegenerateTable: true)
         }
         
-        return downloadManager!.userDefaults!.integerForKey("amountOfQuizes")
+        return downloadManager!.userDefaults!.integer(forKey: "amountOfQuizes")
     }
 }

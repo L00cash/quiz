@@ -17,12 +17,12 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
     var currentQuestion: Question?
     
     lazy var managedObjectContext : NSManagedObjectContext = {
-        let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.managedObjectContext
     }()
     
     lazy var entity: NSEntityDescription = {
-        NSEntityDescription.entityForName("Question", inManagedObjectContext: self.managedObjectContext)
+        NSEntityDescription.entity(forEntityName: "Question", in: self.managedObjectContext)
     }()!
     
     required init(quiz: Quiz, questionNbr: Int, downloadManager: DownloadManagerProtocol, delegate: QuizViewDataProviderDelegateProtocol) {
@@ -64,7 +64,7 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
                 self.filterCurrentQuestion()
                 self.delegate?.setupProgress(Int16(self.questionNbr!), all: Int16(self.quiz!.questions!.count))
                 self.delegate?.setupTitle(self.currentQuestion!.title!)
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.tableView?.reloadData()
                 }
             } catch {
@@ -87,7 +87,7 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
         self.currentQuestion = question!.first as? Question
     }
     
-    func answer(answerNumber: Int) -> Answer {
+    func answer(_ answerNumber: Int) -> Answer {
         let answer = self.currentQuestion?.answers?.filter({ (element) -> Bool in
             if let a = element as? Answer {
                 return Int(a.order) == answerNumber + 1
@@ -99,7 +99,7 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
     }
     
     
-    func checkCorrectAnswer(selectedAnswer: Int) {
+    func checkCorrectAnswer(_ selectedAnswer: Int) {
         let ans = answer(selectedAnswer)
         
         if ans.isCorrect {
@@ -121,9 +121,9 @@ class QuizViewDataProvider: NSObject, QuizViewDataProviderProtocol {
 //MARK: UITableViewDataSource
 extension QuizViewDataProvider: UITableViewDataSource {
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
      
-        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "answerCell")
+        let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "answerCell")
         cell.textLabel?.adjustsFontSizeToFitWidth = true
         let ans = answer(indexPath.row)
         cell.textLabel?.text = ans.title!
@@ -131,7 +131,7 @@ extension QuizViewDataProvider: UITableViewDataSource {
         return cell
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if  let answers = currentQuestion?.answers {
             return answers.count
         } else {

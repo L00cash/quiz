@@ -12,7 +12,7 @@ class QuizListController: UITableViewController {
     
     var dataProvider: QuizListDataProviderProtocol?
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         
     }
 
@@ -21,7 +21,7 @@ class QuizListController: UITableViewController {
         
         dataProvider = QuizListDataProvider()
         let downloadManager = DownloadManager()
-        downloadManager.userDefaults = NSUserDefaults.standardUserDefaults()
+        downloadManager.userDefaults = UserDefaults.standard
         dataProvider!.downloadManager = downloadManager
         dataProvider!.fetchFailedDelegate = self
         dataProvider?.fetchCoreData()
@@ -36,10 +36,10 @@ class QuizListController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "openQuiz" {
             let selectedQuiz = dataProvider?.selectedQuiz()
-            let destinationController = (segue.destinationViewController as! QuizViewController)
+            let destinationController = (segue.destination as! QuizViewController)
             destinationController.quiz = selectedQuiz
             destinationController.questionNumber = Int(selectedQuiz!.questionsDone)
         }
@@ -50,34 +50,34 @@ class QuizListController: UITableViewController {
 extension QuizListController: QuizListDataProviderFailureDelegateProtocol {
     
     func coreDataFetchFailure() {
-        let alertController = UIAlertController(title: "Fetch error", message: "Unable to fetch data from local database", preferredStyle: UIAlertControllerStyle.Alert)
-        self.presentViewController(alertController, animated: false, completion: nil)
-        alertController.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
+        let alertController = UIAlertController(title: "Fetch error", message: "Unable to fetch data from local database", preferredStyle: UIAlertControllerStyle.alert)
+        self.present(alertController, animated: false, completion: nil)
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
             switch action.style{
-            case .Default:
+            case .default:
                 print("default")
                 
-            case .Cancel:
+            case .cancel:
                 print("cancel")
                 
-            case .Destructive:
+            case .destructive:
                 print("destructive")
             }
         }))
     }
     
     func webDataFetchFailure() {
-        let alertController = UIAlertController(title: "Fetch error", message: "Unable to fetch data from web serwis", preferredStyle: UIAlertControllerStyle.Alert)
-        self.presentViewController(alertController, animated: false, completion: nil)
-        alertController.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: { action in
+        let alertController = UIAlertController(title: "Fetch error", message: "Unable to fetch data from web serwis", preferredStyle: UIAlertControllerStyle.alert)
+        self.present(alertController, animated: false, completion: nil)
+        alertController.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: { action in
             switch action.style{
-            case .Default:
+            case .default:
                 print("default")
                 
-            case .Cancel:
+            case .cancel:
                 print("cancel")
                 
-            case .Destructive:
+            case .destructive:
                 print("destructive")
             }
         }))

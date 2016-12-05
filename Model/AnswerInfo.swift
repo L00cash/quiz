@@ -14,10 +14,10 @@ struct AnswerInfo {
     var isCorrect: Bool = false
     
     init(dictionary: NSDictionary) {
-        order = (dictionary.valueForKey("order") as! NSNumber).shortValue
-        text = "\(dictionary.valueForKey("text")!)"
+        order = (dictionary.value(forKey: "order") as! NSNumber).int16Value
+        text = "\(dictionary.value(forKey: "text")!)"
         
-        if let correct = dictionary.objectForKey("isCorrect") as? NSNumber {
+        if let correct = dictionary.object(forKey: "isCorrect") as? NSNumber {
             isCorrect = correct.boolValue
         }
     }

@@ -12,7 +12,7 @@ protocol QuizViewDataProviderProtocol: UITableViewDataSource {
     init(quiz: Quiz, questionNbr: Int, downloadManager: DownloadManagerProtocol, delegate: QuizViewDataProviderDelegateProtocol)
     weak var delegate: QuizViewDataProviderDelegateProtocol? {get set}
     var tableView: UITableView? {get set}
-    func answer(answerNumber: Int) -> Answer
-    func checkCorrectAnswer(selectedAnswer: Int)
+    func answer(_ answerNumber: Int) -> Answer
+    func checkCorrectAnswer(_ selectedAnswer: Int)
     var downloadManager: DownloadManagerProtocol?  {get set}
 }

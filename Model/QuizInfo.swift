@@ -15,11 +15,11 @@ struct QuizInfo {
     let questionCount: Int16
     
     init(dictionary: NSDictionary) {
-        title = dictionary.valueForKey("title") as! String
-        id = "\(dictionary.valueForKey("id")!)"
-        if let mainPhoto = dictionary.valueForKey("mainPhoto") as? NSDictionary, let url = mainPhoto.valueForKey("url") as? String {
+        title = dictionary.value(forKey: "title") as! String
+        id = "\(dictionary.value(forKey: "id")!)"
+        if let mainPhoto = dictionary.value(forKey: "mainPhoto") as? NSDictionary, let url = mainPhoto.value(forKey: "url") as? String {
             photoUrl = url
         }
-        questionCount = (dictionary.valueForKey("questions") as! NSNumber).shortValue
+        questionCount = (dictionary.value(forKey: "questions") as! NSNumber).int16Value
     }
 }

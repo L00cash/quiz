@@ -15,7 +15,7 @@ class Quiz: NSManagedObject {
 // Insert code here to add functionality to your managed object subclass
     
     init(quizInfo: QuizInfo, entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        super.init(entity: entity, insertInto: context)
         
         title = quizInfo.title
         photoUrl = quizInfo.photoUrl
@@ -23,7 +23,7 @@ class Quiz: NSManagedObject {
         questionsCount = quizInfo.questionCount
     }
     
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
 }

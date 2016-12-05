@@ -30,28 +30,28 @@ class QuizViewController: UIViewController {
 
 extension QuizViewController: QuizViewDataProviderDelegateProtocol {
     
-    func setupProgress(done: Int16, all: Int16) {
+    func setupProgress(_ done: Int16, all: Int16) {
         self.progress.setProgress(Float(done)/Float(all), animated: true)
     }
     
-    func setupTitle(title: String) {
-        dispatch_async(dispatch_get_main_queue()) {
+    func setupTitle(_ title: String) {
+        DispatchQueue.main.async {
             self.questionTitle.text = title
         }
     }
     
     func showEndScreen() {
         
-        dispatch_async(dispatch_get_main_queue()) {
-            let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("endView") as! EndOfQuizView
+        DispatchQueue.main.async {
+            let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "endView") as! EndOfQuizView
             controller.questionsCount = self.quiz?.questions?.count
             controller.correctAnswers = Int(self.quiz!.questionsCorrect)
             
             self.quiz?.questionsCorrect = 0
             
             let transition = CATransition.transitionFromRight()
-            self.view.window?.layer.addAnimation(transition, forKey: kCATransition)
-            self.presentViewController(controller, animated: false, completion: nil)
+            self.view.window?.layer.add(transition, forKey: kCATransition)
+            self.present(controller, animated: false, completion: nil)
         }
     }
     
@@ -62,17 +62,17 @@ extension QuizViewController: QuizViewDataProviderDelegateProtocol {
 
 extension QuizViewController: UITableViewDelegate {
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        dataProvider?.answer(indexPath.row)
         
         dataProvider!.checkCorrectAnswer(indexPath.row)
         
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("quizView") as! QuizViewController
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "quizView") as! QuizViewController
         controller.questionNumber = questionNumber + 1
         controller.quiz = quiz
         
         let transition = CATransition.transitionFromRight()
-        self.view.window?.layer.addAnimation(transition, forKey: kCATransition)
-        self.presentViewController(controller, animated: false, completion: nil)
+        self.view.window?.layer.add(transition, forKey: kCATransition)
+        self.present(controller, animated: false, completion: nil)
     }
 }

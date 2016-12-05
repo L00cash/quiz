@@ -14,7 +14,7 @@ class Answer: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
     init(question: Question, answerInfo: AnswerInfo, entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        super.init(entity: entity, insertInto: context)
         
         isCorrect = answerInfo.isCorrect
         order = answerInfo.order
@@ -23,8 +23,8 @@ class Answer: NSManagedObject {
         
     }
     
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
     
 }
